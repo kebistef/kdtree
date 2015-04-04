@@ -2,7 +2,9 @@ package a05;
 
 import java.awt.RenderingHints.Key;
 
+import edu.princeton.cs.algs4.RedBlackBST;
 import edu.princeton.cs.algs4.ST;
+import edu.princeton.cs.introcs.In;
 
 /**
  * @author Kyle Ottman
@@ -16,28 +18,13 @@ import edu.princeton.cs.algs4.ST;
 
 public class PointST<Value> {
 	
-	private Node root;
-	
-	private class Node {
-		private Value val;
-		private Node left;
-		private Node right;
-		private Point2D point;
-		private int size;
-		
-		public Node(Point2D point, Value val, int size) {
-			this.point = point;
-			this.val = val;
-			this.size = size;
- 		}
-		
-	}
+	private RedBlackBST<Point2D, Value> redBlackTree;
 	
 	/**
 	 * construct an empty symbol table of points 
 	 */
 	public PointST() {
-		ST<Point2D, Value> symbolTable = new ST<>();
+		 redBlackTree = new RedBlackBST<>();
 	}
 
 	/**
@@ -45,7 +32,7 @@ public class PointST<Value> {
 	 * @return boolean
 	 */
 	public boolean isEmpty() {
-		return size() == 0;
+		return redBlackTree.isEmpty();
 	}
 
 	/**
@@ -53,32 +40,18 @@ public class PointST<Value> {
 	 * @return int size
 	 */
 	public int size() {
-		return size(root);
+		return redBlackTree.size();
 	}
 
-	private int size(Node x) {
-		if (x == null) return 0;
-		else return x.size;
-	}
 	/**
 	 * associate the value val with point p
 	 * @param p
 	 * @param val
 	 */
 	public void put(Point2D p, Value val)  {
-
+		redBlackTree.put(p, val);
 	}
 	
-	private Node put(Node x, Point2D p, Value val) {
-		if (x == null) return new Node(p, val, 1);
-		int compare = p.compareTo(x.point);
-		if (compare < 0) 
-			x.left = put(x.left, p, val);
-		else if (compare > 0) 
-			x.right = put(x.right, p, val);
-		else x.val = val;
-		return x;
-	}
 
 	/**
 	 * value associated with point p 
@@ -86,17 +59,7 @@ public class PointST<Value> {
 	 * @return
 	 */
 	public Value get(Point2D p) {
-		return get(root, p);
-	}
-	
-	private Value get(Node x, Point2D p) {
-		if (x == null) return  null;
-		int compare = p.compareTo(x.point);
-		if (compare < 0) 
-			return get(x.left, p);
-		else if (compare > 0) 
-			return get(x.right, p);
-		else return x.val;
+		return redBlackTree.get(p);
 	}
 	
 	/**
@@ -105,7 +68,7 @@ public class PointST<Value> {
 	 * @return boolean
 	 */
 	public boolean contains(Point2D p) {
-		return get(p) != null;
+		return redBlackTree.contains(p);
 	}
 	
 	/**
@@ -113,8 +76,7 @@ public class PointST<Value> {
 	 * @return Iterable<Point2D>
 	 */
 	public Iterable<Point2D> points() {
-		
-		return null;
+		return redBlackTree.keys(); 
 	}
 	
 	/**
@@ -123,7 +85,9 @@ public class PointST<Value> {
 	 * @return
 	 */
 	public Iterable<Point2D> range(RectHV rect) {
-		return null;
+		Point2D bottomLeft = new Point2D(rect.xmin(), rect.ymin());
+		Point2D topRight = new Point2D(rect.xmax(), rect.ymax());
+		return redBlackTree.keys(bottomLeft, topRight);
 	}
 	
 	/**
@@ -132,15 +96,41 @@ public class PointST<Value> {
 	 * @return
 	 */
 	public Point2D nearest(Point2D p) {
-		return null;
+		Point2D nearestPoint = null;
+		double nearestDistance = 0;
+		double distance;
+		
+		for (Point2D point : redBlackTree.keys()) {
+			distance = p.distanceSquaredTo(point);
+			if (nearestPoint == null) { // only runs once, on the first iteration
+				nearestPoint = point;
+				nearestDistance = distance;
+			}
+			else if (distance < nearestDistance) {
+				nearestPoint = point;
+				nearestDistance = distance;
+			}
+		}
+		
+		return nearestPoint;
 	}
 	
 	public static void main(String[] args) {
-		Point2D point1 = new Point2D(3, 4);
-		Point2D point2 = new Point2D(5, 6);
-		Point2D point3 = new Point2D(8, 2);
 		
-		PointST test = new PointST();
+		String inputFile = "/a05/input100K.txt";
+		In in = new In(inputFile);
+		PointST<Point2D> points = new PointST<>();
+		
+		double x = 0;
+		double y = 0;
+		try {
+			do {
+				x = in.readDouble();
+				y = in.readDouble();
+				Point2D point = new Point2D(x, y);
+				points.put(point, point);
+			} while (true);
+		} catch (Exception e) {}
 		
 		
  	}
