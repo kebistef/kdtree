@@ -117,7 +117,7 @@ public class PointST<Value> {
 	
 	public static void main(String[] args) {
 		
-		String inputFile = "/a05/input100K.txt";
+		String inputFile = "/a05/input5.txt";
 		In in = new In(inputFile);
 		PointST<Point2D> points = new PointST<>();
 		
@@ -132,6 +132,8 @@ public class PointST<Value> {
 			} while (true);
 		} catch (Exception e) {}
 		
-		
+		Point2D myPoint = new Point2D(3, 5);
+		Point2D nearest = points.nearest(myPoint);
+		System.out.println(nearest);
  	}
 }
