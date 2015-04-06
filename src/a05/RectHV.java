@@ -86,7 +86,8 @@ public final class RectHV {
 
     // return a string representation of this axis-aligned rectangle
     public String toString() {
-        return "[" + xmin + ", " + xmax + "] x [" + ymin + ", " + ymax + "]";
+//        return "[" + xmin + ", " + xmax + "] x [" + ymin + ", " + ymax + "]";
+        return "(" + xmin + ", " + ymin + "), (" + xmax + ", " + ymax + ")";
     }
 
 }

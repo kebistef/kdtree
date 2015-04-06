@@ -72,7 +72,7 @@ public class KdTreeST<Value> {
 			throw new IllegalArgumentException ("null value cannot be inserted");
 		}
 				
-		root = put(root, p, val, true);
+		root = put(root, p, val, true, new RectHV(0, 0, 1, 1));
 	}
 	
 	/**
@@ -84,27 +84,24 @@ public class KdTreeST<Value> {
 	 * @param rect
 	 * @return node
 	 */
-	private Node put(Node node, Point2D point, Value val, boolean orient) {
-		RectHV rect;
-		
+	private Node put(Node node, Point2D point, Value val, boolean orient, RectHV rect) {
 		if (node == null) {
-			rect = new RectHV(1, 1, 1, 1);
 			return new Node(point, val, rect);				
 		}
 		
 		Point2D parentNode = node.p;
 
 		if (orient && parentNode.x() > point.x()) { // Horizontal left
-			node.lb = put(node.lb, point, val, !orient);
+			node.lb = put(node.lb, point, val, !orient, new RectHV(rect.xmin(), rect.ymin(), parentNode.x(), rect.ymax()));
 		}
 		else if (orient) { // Horizontal right
-			node.rb = put(node.rb, point, val, !orient);
+			node.rb = put(node.rb, point, val, !orient, new RectHV(parentNode.x(), rect.ymin(), rect.xmax(), rect.ymax()));
 		}
 		else if (parentNode.y() > point.y()) { // Vertical below
-			node.lb = put(node.lb, point, val, orient);
+			node.lb = put(node.lb, point, val, orient, new RectHV(rect.xmin(), rect.ymin(), rect.xmax(), parentNode.y()));
 		}
 		else { // Vertical above
-			node.rb = put(node.rb, point, val, orient);
+			node.rb = put(node.rb, point, val, orient, new RectHV(rect.xmin(), parentNode.y(), rect.xmax(), rect.ymax()));
 		}
 		
 		N++;
