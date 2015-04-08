@@ -223,8 +223,24 @@ public class KdTreeST<Value> {
 	 * @param p
 	 * @return
 	 */
+    // 12:50 in gay ass video  https://www.youtube.com/watch?v=c_KIuD_mvEU&feature=youtu.be
 	public Point2D nearest(Point2D p) {
+		Point2D closest;
+		
 		return null;
+	}
+	
+	private Point2D nearest(Point2D p1, Point2D p2, Node node, boolean orient) {
+		Point2D nearestPoint = p2;
+		
+		if (orient) {
+			
+		}
+		else {
+			
+		}
+			
+		return nearestPoint;
 	}
 	
 	public static void main(String[] args) {
